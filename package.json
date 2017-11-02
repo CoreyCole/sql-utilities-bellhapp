@@ -1,0 +1,19 @@
+{
+  "name": "sql-utilities-bellhapp",
+  "version": "0.0.1",
+  "description": "The purpose of this repository is to make it easier to do CRUD operations on the bellhapp database.",
+  "author": "Corey Cole",
+  "license": "ISC",
+  "dependencies": {
+    "@types/mysql": "^2.15.0",
+    "bluebird": "3.5.1",
+    "json-diff": "0.5.2",
+    "moment": "2.19.1",
+    "mysql": "2.15.0",
+    "pretty-json-stringify": "0.0.2",
+    "shelljs": "0.7.8",
+    "sql": "0.78.0",
+    "util": "0.10.3",
+    "uuid": "3.1.0"
+  }
+}
