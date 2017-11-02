@@ -1,6 +1,5 @@
 # Bellhapp SQL Utilities
-**Make sure to run commands from root of repo (`node src/export.js`) to make sure file paths work**
-The purpose of this repository is to make it easier to do CRUD operations on the database.
+The purpose of this repository is to make it easier to do CRUD operations on the bellhapp database.
 #### Features:
 - Exporting JSON representation of the database for 1 restaurant location
 - Importing JSON by outputting a file of SQL statements
@@ -8,31 +7,41 @@ The purpose of this repository is to make it easier to do CRUD operations on the
 - Create/Update menus, sections, items, optionGroups, optionGroupOptions
 - Delete optionGroups, optionGroupOptions
 
+#### Setup:
+- clone the repository
+- run `yarn` in the cloned dir to install dependencies
+- add `src/config.json` for database credentials
+
 ## Usage
+**Make sure to run commands from root of repo (`node src/export.js`) to make sure file paths work**
 ### Exporting from database to JSON
 This will output a JSON file to `exports/` with the current state of the menu
-```
+```shell
 node src/export.js
 ```
 
 ### Importing to database from JSON
-This will compare jsonFileOld to jsonFileNew and output a SQL file to `sql-out/` based on the differences between them
-**Make sure to keep an original export copy so the import script can do a diff**
-```
+This will compare jsonFileOld to jsonFileNew and output a SQL file to `sql-out/` based on the differences between them.
+**Make sure to keep a copy of the original export so the import script can do a diff.**
+```shell
 node src/import.js jsonFileOld jsonFileNew
 ```
 Suggested usage:
-```
+```shell
 # generate a fresh export from the database
 node src/export.js
-cp exports/<newly-exported-file>.json exports/export-changes.json
+
+# make an exact copy of that new export
+cp exports/<new-exported-file>.json exports/export-changes.json
+
 # make your changes to exports/export-changes.json
+# then run the import script
 node src/import.js exports/<newly-exported-file>.json exports/export-changes.json
 ```
 
 #### `jsonFileNew` Format
 ##### Creating
-To create a new menu, section, item, optionGroup, or optionGroupOption, add to the json as an array under a `'uuid()'` key.
+To create a new `menu`, `section`, `item`, `optionGroup` or `optionGroupOption`, add to the json as an array under a `'uuid()'` key.
 All of the children of this new object must also have `'uuid()'` keyed arrays for child objects to be created. (i.e. new item => new options)
 The `'uuid()'` object must always be an array in order to support creating multiple sibling objects at once. (See optionGroupOptions section in example below)
 ```diff
@@ -115,7 +124,7 @@ To update an existing object, simply change the fields.
 ```
 
 ##### Deleting
-To remove an option group or option group option from the database, simply remove it from the JSON.
+To remove an `optionGroup` or `optionGroupOption` from the database, simply remove it from the JSON.
 **If you want to remove a menu, section or item, update its `isAvailable` flag to 0**
 ```diff
    menus: {
