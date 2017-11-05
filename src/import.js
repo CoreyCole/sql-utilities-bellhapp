@@ -36,19 +36,34 @@ parseDiff(jsonFileNew, menuDiff, IMPORT_FILE_NAME)
  */
 function parseDiff (newJsonObj, menuDiff, filePath) {
   for (menuUid in menuDiff) {
+    const menu = newJsonObj.menus[getSafeUid(menuUid)]
+    const printMenu = menu ? menu.name : 'New menu name'
+    shelljs.echo(`/** Diff menu: ${printMenu} */\n`).toEnd(IMPORT_FILE_NAME)
     outputSQL(newJsonObj, menuDiff, 'menus', [menuUid, rluid], 'sections', filePath)
     const sectionDiff = menuDiff[menuUid].sections
     for (sectionUid in sectionDiff) {
+      const section = menu ? menu.sections[getSafeUid(sectionUid)] : null
+      const printSection = section ? section.name : 'New section name'
+      shelljs.echo(`/** Diff section: ${printMenu} > ${printSection} */\n`).toEnd(IMPORT_FILE_NAME)
       outputSQL(newJsonObj, sectionDiff, 'sections', [sectionUid, menuUid, rluid], 'items', filePath)
       const itemDiff = sectionDiff[sectionUid].items
       for (itemUid in itemDiff) {
+        const item = section ? section.items[getSafeUid(itemUid)] : null
+        const printItem = item ? item.name : 'New item name'
+        shelljs.echo(`/** Diff item: ${printMenu} > ${printSection} > ${printItem} */\n`).toEnd(IMPORT_FILE_NAME)
         outputSQL(newJsonObj, itemDiff, 'items', [itemUid, sectionUid, menuUid, rluid], 'optionGroups', filePath)
         const optionGroupDiff = itemDiff[itemUid].optionGroups
         for (optionGroupUid in optionGroupDiff) {
+          const optionGroup = item ? item.optionGroups[getSafeUid(optionGroupUid)] : null
+          const printOptionGroup = optionGroup ? optionGroup.name : 'New optionGroup name'
+          shelljs.echo(`/** Diff optionGroup: ${printMenu} > ${printSection} > ${printItem} > ${printOptionGroup} */\n`).toEnd(IMPORT_FILE_NAME)
           outputSQL(newJsonObj, optionGroupDiff, 'optionGroups', [optionGroupUid, itemUid, sectionUid, menuUid, rluid], 'options', filePath)
-          const optionsDiff = optionGroupDiff[optionGroupUid].options
-          for (optionUid in optionsDiff) {
-            outputSQL(newJsonObj, optionsDiff, 'options', [optionUid, optionGroupUid, itemUid, sectionUid, menuUid, rluid], null, filePath)
+          const optionDiff = optionGroupDiff[optionGroupUid].options
+          for (optionUid in optionDiff) {
+            const option = optionGroup ? optionGroup.options[getSafeUid(optionUid)] : null
+            const printOption = option ? option.name : 'New option'
+            shelljs.echo(`/** Diff option: ${printMenu} > ${printSection} > ${printItem} > ${printOptionGroup} > ${printOption} */\n`).toEnd(IMPORT_FILE_NAME)
+            outputSQL(newJsonObj, optionDiff, 'options', [optionUid, optionGroupUid, itemUid, sectionUid, menuUid, rluid], null, filePath)
           }
         }
       }
@@ -70,8 +85,8 @@ function outputSQL (newJsonObj, jsonDiff, objectType, uidStack, exclude, filePat
   const parentUid = uidStack[1]
   const printType = objectType.substring(0, objectType.length - 1)
   if (isNewChild(uid)) {
-    shelljs.echo(`/** Create new ${printType}: ${jsonDiff[uid].name} */\n`).toEnd(filePath)
-    outputCreate(jsonDiff, objectType, uid, parentUid, filePath)
+    shelljs.echo(`/** Create new ${printType}${jsonDiff[uid].name ? ': ' + jsonDiff[uid].name : ''} */\n`).toEnd(filePath)
+    outputCreate(jsonDiff[uid], objectType, parentUid, filePath)
   } else if (isDeletedChild(uid)) {
     if (objectType !== 'optionGroups' && objectType !== 'options')
       throw `ERROR: Cannot delete objects of type ${objectType}! Try updating it's isAvailable flag instead`
@@ -92,22 +107,19 @@ function outputSQL (newJsonObj, jsonDiff, objectType, uidStack, exclude, filePat
  * @param {string} parentUid 
  * @param {string} filePath 
  */
-function outputCreate (jsonDiff, objectType, key, parentUid, filePath) {
-  const obj = { ...jsonDiff[key] } // shallow copy
-  if (obj) { // check if child was defined, else stop recursion here
-    for (const newChildObj of obj) { // obj is an array
-      const jsonDiffCopy = { ...jsonDiff }
-      const uid = uuid()
-      newChildObj.uid = uid
-      jsonDiffCopy[uid] = { ...newChildObj }
-      jsonDiffCopy[uid].__parent = parentUid
+function outputCreate (jsonDiff, objectType, parentUid, filePath) {
+  const obj = jsonDiff.slice(0) // shallow copy
+  for (const newChildObj of obj) { // obj is an array
+    newChildCopy = { ...newChildObj }
+    const uid = uuid()
+    newChildCopy.uid = uid
+    newChildCopy.__parent = parentUid
 
-      const childType = mapToChildType(objectType)
-      if (childType) delete jsonDiffCopy[uid][childType]
-      outputStoredProcedure(jsonDiffCopy[uid], objectType, filePath, true)
-      // recursion where base case is childType === null (optionGroupOptions have no child)
-      if (childType) outputCreate(newChildObj[childType], childType, 'uuid()', uid, filePath)
-    }
+    const childType = mapToChildType(objectType)
+    if (childType) delete newChildCopy[childType]
+    outputStoredProcedure(newChildCopy, objectType, filePath)
+    // recursion where base case is childType === null (optionGroupOptions have no child)
+    if (childType) outputCreate(newChildObj[childType], childType, uid, filePath)
   }
 }
 
@@ -136,15 +148,16 @@ function outputUpdate (newJsonObj, objectType, uidStack, filePath) {
  */
 function outputDelete (jsonDiff, objectType, key, filePath) {
   const obj = { ...jsonDiff[key] } // shallow copy
-  if (obj) {
-    for (const deletedChildUid in obj) { // obj is an object
-      const childType = mapToChildType(objectType)
-      // recursion where base case is childType === null (optionGroupOptions have no child)
-      if (childType) outputDelete(obj[childType], objectType, deletedChildUid, filePath)
+  const safeUid = getSafeUid(key) // strip __deleted from uid
+  if (objectType === 'optionGroups') {
+    if (obj.options) {
+      for (const optionUid in obj.options) {
+        outputStoredProcedure({ uid: optionUid }, 'options', filePath, true)
+      }
     }
-    // output the stored procedure after recursion so deleted in reverse order
-    const safeUid = key.replace(/__deleted/g, '');
     outputStoredProcedure({ uid: safeUid }, objectType, filePath, true)
+  } else if (objectType === 'options') {
+    outputStoredProcedure({ uid: safeUid }, 'options', filePath, true)
   }
 }
 
@@ -242,6 +255,16 @@ function isNewChild (key) {
  */
 function isDeletedChild (key) {
   return key.endsWith('__deleted')
+}
+
+function getSafeUid (key) {
+  if (isNewChild(key)) {
+    return key.replace(/__added/g, '');
+  } else if (isDeletedChild(key)) {
+    return key.replace(/__deleted/g, '');
+  } else {
+    return key
+  }
 }
 
 /**

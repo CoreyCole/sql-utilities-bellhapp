@@ -35,8 +35,11 @@ node src/export.js
 cp exports/<new-exported-file>.json exports/export-changes.json
 
 # make your changes to exports/export-changes.json
+# check your diff using json-diff
+json-diff exports/<new-exported-file>.json exports/export-changes.json
+
 # then run the import script
-node src/import.js exports/<newly-exported-file>.json exports/export-changes.json
+node src/import.js exports/<new-exported-file>.json exports/export-changes.json
 ```
 
 #### `jsonFileNew` Format
