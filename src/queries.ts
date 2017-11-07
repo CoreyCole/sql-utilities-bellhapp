@@ -1,8 +1,6 @@
-const sql = require('sql')
-sql.setDialect('mysql')
-const Promise = require('bluebird')
+import * as Promise from 'bluebird'
 
-const schema = require('./schema.js').schema
+const schema = require('./schema').schema
 const RESTAURANT = schema.RESTAURANT
 const RESTAURANT_LOCATION = schema.RESTAURANT_LOCATION
 const MENU = schema.MENU
@@ -12,11 +10,8 @@ const OPTION_GROUP = schema.OPTION_GROUP
 const OPTION_GROUP_OPTION = schema.OPTION_GROUP_OPTION
 const OPTION_GROUP_TYPE = schema.OPTION_GROUP_TYPE
 
-Object.defineProperty(exports, "__esModule", { value: true });
-
-var queries;
-(function (queries) {
-  queries.getRestaurantLocation = (connection, restaurantName) => {
+export namespace queries {
+  export function getRestaurantLocation (connection, restaurantName) {
     const query = RESTAURANT_LOCATION.select(
         RESTAURANT_LOCATION.id, RESTAURANT_LOCATION.uid, RESTAURANT.name, RESTAURANT.description, RESTAURANT.phone, RESTAURANT.email, RESTAURANT.website)
       .from(RESTAURANT_LOCATION
@@ -27,12 +22,11 @@ var queries;
       connection.query(query.text, query.values, (err, rows) => {
         if (err) reject(err)
         if (!rows || rows.length === 0) reject(`ERROR: Restaurant not found with name: ${restaurantName}`)
-        
         resolve(rows[0])
       })
     })
   }
-  queries.getMenus = (connection, rlid) => {
+  export function getMenus (connection, rlid) {
     const query = MENU.select(
         MENU.id, MENU.uid, MENU.rank, MENU.name, MENU.isAvailable, MENU.start, MENU.end)
       .from(MENU)
@@ -47,7 +41,7 @@ var queries;
       })
     })
   }
-  queries.getMenuSections = (connection, mid) => {
+  export function getMenuSections (connection, mid) {
     const query = MENU_SECTION.select(
         MENU_SECTION.id, MENU_SECTION.uid, MENU_SECTION.rank, MENU_SECTION.name, MENU_SECTION.ageLimit)
       .from(MENU_SECTION)
@@ -62,7 +56,7 @@ var queries;
       })
     })
   }
-  queries.getMenuSectionItems = (connection, msid) => {
+  export function getMenuSectionItems (connection, msid) {
     const query = ITEM.select(
         ITEM.id, ITEM.uid, ITEM.rank, ITEM.name, ITEM.description, ITEM.price, ITEM.isAvailable)
       .from(ITEM)
@@ -77,7 +71,7 @@ var queries;
       })
     })
   }
-  queries.getItemOptionGroups = (connection, iid) => {
+  export function getItemOptionGroups (connection, iid) {
     const query = OPTION_GROUP.select(
         OPTION_GROUP.id, OPTION_GROUP.uid, OPTION_GROUP.name, OPTION_GROUP.rank, OPTION_GROUP_TYPE.type)
       .from(OPTION_GROUP
@@ -92,7 +86,7 @@ var queries;
       })
     })
   }
-  queries.getItemOptionGroupOptions = (connection, ogid) => {
+  export function getItemOptionGroupOptions (connection, ogid) {
     const query = OPTION_GROUP_OPTION.select(
         OPTION_GROUP_OPTION.id, OPTION_GROUP_OPTION.uid, OPTION_GROUP_OPTION.name, OPTION_GROUP_OPTION.rank, OPTION_GROUP_OPTION.value, OPTION_GROUP_OPTION.isDefault)
       .from(OPTION_GROUP_OPTION)
@@ -107,4 +101,4 @@ var queries;
       })
     })
   }
-})(queries = exports.queries || (exports.queries = {}));
+}

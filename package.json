@@ -1,19 +1,55 @@
 {
   "name": "sql-utilities-bellhapp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The purpose of this repository is to make it easier to do CRUD operations on the bellhapp database.",
   "author": "Corey Cole",
   "license": "ISC",
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watchAll",
+    "clean": "find ./build/exports/ -type f -name '*.json' -delete && find ./build/imports/ -type f -name '*.sql' -delete",
+    "lint": "tslint --project .",
+    "compile": "npm run lint && tsc -p ."
+  },
+  "bin": {
+    "bh-sql": "./build/index.js"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/*.spec.ts"
+    ]
+  },
   "dependencies": {
-    "@types/mysql": "^2.15.0",
     "bluebird": "3.5.1",
+    "deepcopy": "0.6.3",
+    "jest": "21.2.1",
     "json-diff": "0.5.2",
     "moment": "2.19.1",
     "mysql": "2.15.0",
     "pretty-json-stringify": "0.0.2",
     "shelljs": "0.7.8",
     "sql": "0.78.0",
+    "typescript": "2.6.1",
     "util": "0.10.3",
     "uuid": "3.1.0"
+  },
+  "devDependencies": {
+    "@types/commander": "2.11.0",
+    "@types/jest": "21.1.5",
+    "@types/mysql": "2.15.0",
+    "@types/node": "8.0.47",
+    "nodemon": "1.12.1",
+    "ts-jest": "21.1.4",
+    "tslint": "5.8.0",
+    "tslint-config-standard": "7.0.0"
   }
 }

@@ -1,10 +1,10 @@
-const sql = require('sql')
-Object.defineProperty(exports, "__esModule", { value: true });
+import * as sql from 'sql'
+sql.setDialect('mysql')
 
-var schema;
-(function (schema) {
-  schema.ITEM = sql.define({
+export namespace schema {
+  export const ITEM = sql.define({
     name: 'ITEM',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -17,8 +17,9 @@ var schema;
       'thumbnailImageUrl'
     ]
   })
-  schema.OPTION_GROUP = sql.define({
+  export const OPTION_GROUP = sql.define({
     name: 'OPTION_GROUP',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -28,8 +29,9 @@ var schema;
       'optionGroupTypeId'
     ]
   })
-  schema.OPTION_GROUP_TYPE = sql.define({
+  export const OPTION_GROUP_TYPE = sql.define({
     name: 'OPTION_GROUP_TYPE',
+    schema: 'restaurant',
     columns: [
       {
         name: 'id'
@@ -40,8 +42,9 @@ var schema;
       }
     ]
   })
-  schema.OPTION_GROUP_OPTION = sql.define({
+  export const OPTION_GROUP_OPTION = sql.define({
     name: 'OPTION_GROUP_OPTION',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -52,8 +55,9 @@ var schema;
       'optionGroupId'
     ]
   })
-  schema.MENU_SECTION = sql.define({
+  export const MENU_SECTION = sql.define({
     name: 'MENU_SECTION',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -63,8 +67,9 @@ var schema;
       'menuId'
     ]
   })
-  schema.MENU = sql.define({
+  export const MENU = sql.define({
     name: 'MENU',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -76,8 +81,9 @@ var schema;
       'restaurantLocationId'
     ]
   })
-  schema.RESTAURANT_LOCATION = sql.define({
+  export const RESTAURANT_LOCATION = sql.define({
     name: 'RESTAURANT_LOCATION',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -87,8 +93,9 @@ var schema;
       'timezoneId'
     ]
   })
-  schema.RESTAURANT = sql.define({
+  export const RESTAURANT = sql.define({
     name: 'RESTAURANT',
+    schema: 'restaurant',
     columns: [
       'id',
       'uid',
@@ -100,4 +107,4 @@ var schema;
       'isActive'
     ]
   })
-})(schema = exports.schema || (exports.schema = {}));
+}
