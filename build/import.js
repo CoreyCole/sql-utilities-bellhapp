@@ -3,24 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonDiff = require("json-diff");
 const shelljs = require('shelljs');
 const moment = require('moment');
-// const util = require('util')
 const uuid = require('uuid');
 const spTemplates_1 = require("./spTemplates");
-// if (process.argv.length === 2) throw 'ERROR: Forgot filename arguments'
-// if (process.argv.length !== 4) throw 'ERROR: Invalid arguments'
-// const jsonFileOldPath = process.argv[2]
-// const jsonFileNewPath = process.argv[3]
-// const IMPORT_TIME = moment()
-// const RESTAURANT_NAME = 'Cedars'
-// const IMPORT_FILE_PATH = './sql-out/'
-// const IMPORT_FILE_NAME = `${IMPORT_FILE_PATH}import-${IMPORT_TIME.format('YYYY-MM-DD-HH:mm:ss')}.sql`
-// shelljs.mkdir(IMPORT_FILE_PATH)
-// shelljs.touch(IMPORT_FILE_NAME)
-// shelljs.echo(`/** Generated using diff from ${jsonFileOldPath} => ${jsonFileNewPath} */\n`).toEnd(IMPORT_FILE_NAME)
-// const rluid = jsonFileNew.uid
-// const menuDiff = jsonDiff.diff(jsonFileOld.menus, jsonFileNew.menus)
-// console.log(util.inspect(menuDiff, false, null))
-// parseDiff(jsonFileNew, menuDiff, IMPORT_FILE_NAME)
 var importScripts;
 (function (importScripts) {
     /**
@@ -83,7 +67,7 @@ var importScripts;
     function writeSqlToFile(sqlStatements, exportFilePath) {
         const date = moment();
         const timestamp = `/** Json Diff SQL written on ${date.format('MMMM Do YYYY, h:mm:ss a')} */`;
-        shelljs.echo(`${timestamp}\n${sqlStatements.join('\n')}`).toEnd(`${exportFilePath}/import-${date.format('YYYY-MM-DD-HH:mm:ss')}`);
+        shelljs.echo(`${timestamp}\n${sqlStatements.join('\n')}`).toEnd(`${exportFilePath}/import-${date.format('YYYY-MM-DD-HH:mm:ss')}.sql`);
     }
     importScripts.writeSqlToFile = writeSqlToFile;
     /**
