@@ -45,7 +45,7 @@ var importScripts;
                     for (const optionGroupUid in optionGroupDiff) {
                         const optionGroup = item ? item.optionGroups[getSafeUid(optionGroupUid)] : null;
                         const printOptionGroup = optionGroup ? optionGroup.name : 'New optionGroup name';
-                        sqlStatements = sqlStatements.concat([`/** Diff optionGroup: ${printMenu} > ${printSection} > ${printItem} > ${printOptionGroup} */\n`], outputSQL(newJsonObj, optionGroupDiff, 'optionGroups', [optionGroupUid, itemUid, sectionUid, menuUid, rluid]));
+                        sqlStatements = sqlStatements.concat([`/** Diff optionGroup: ${printMenu} > ${printSection} > ${printItem} > ${printOptionGroup} */`], outputSQL(newJsonObj, optionGroupDiff, 'optionGroups', [optionGroupUid, itemUid, sectionUid, menuUid, rluid]));
                         const optionDiff = optionGroupDiff[optionGroupUid].options;
                         for (const optionUid in optionDiff) {
                             const option = optionGroup ? optionGroup.options[getSafeUid(optionUid)] : null;
