@@ -137,7 +137,7 @@ export namespace importScripts {
    */
   function outputCreate (jsonDiff, objectType, parentUid): string[] {
     const obj = jsonDiff.slice(0) // shallow copy
-    const statements: string[] = []
+    let statements: string[] = []
     for (const newChildObj of obj) { // obj is an array
       const newChildCopy = { ...newChildObj }
       const uid = uuid()
@@ -148,7 +148,7 @@ export namespace importScripts {
       statements.push(outputStoredProcedure(newChildCopy, objectType))
       // recursion where base case is childType === null (optionGroupOptions have no child)
       if (childType && newChildCopy[childType] && newChildCopy[childType]['uuid()'])
-        statements.concat(outputCreate(newChildCopy[childType]['uuid()'], childType, uid))
+        statements = statements.concat(outputCreate(newChildCopy[childType]['uuid()'], childType, uid))
     }
     return statements
   }
