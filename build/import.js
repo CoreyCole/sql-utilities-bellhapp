@@ -197,16 +197,18 @@ var importScripts;
      */
     function getNewObj(newJsonObj, uidStack) {
         let currType = 'menus';
-        let currUid = uidStack.pop(); // rluid is always first
+        let currParent = uidStack.pop();
+        let currUid = currParent;
         let currObj = Object.assign({}, newJsonObj); // shallow copy
         while (uidStack.length > 0 && currType !== null) {
+            currParent = currUid;
             currUid = uidStack.pop();
             currObj = Object.assign({}, currObj[currType][currUid]); // shallow copy each iteration
             currType = mapToChildType(currType);
         }
         if (currType)
             delete currObj[currType];
-        currObj.__parent = currUid;
+        currObj.__parent = currParent;
         return currObj;
     }
     /**

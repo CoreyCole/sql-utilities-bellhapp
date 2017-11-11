@@ -223,15 +223,17 @@ export namespace importScripts {
    */
   function getNewObj (newJsonObj, uidStack): MenuObject {
     let currType: string | null = 'menus'
-    let currUid = uidStack.pop() // rluid is always first
+    let currParent = uidStack.pop()
+    let currUid = currParent
     let currObj = { ...newJsonObj } // shallow copy
     while (uidStack.length > 0 && currType !== null) {
+      currParent = currUid
       currUid = uidStack.pop()
       currObj = { ...currObj[currType][currUid] } // shallow copy each iteration
       currType = mapToChildType(currType)
     }
     if (currType) delete currObj[currType]
-    currObj.__parent = currUid
+    currObj.__parent = currParent
     return currObj
   }
 
