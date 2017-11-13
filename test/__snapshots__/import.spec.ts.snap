@@ -10,15 +10,15 @@ exports[`json import create should create a new optionGroup 1`] = `6`;
 
 exports[`json import create should create a new section 1`] = `4`;
 
-exports[`json import create should create complex nested MenuObjects 1`] = `4`;
+exports[`json import create should create complex nested MenuObjects 1`] = `22`;
 
-exports[`json import create should create complex nested MenuObjects 2`] = `4`;
+exports[`json import create should create complex nested MenuObjects 2`] = `22`;
 
-exports[`json import create should create complex nested MenuObjects 3`] = `4`;
+exports[`json import create should create complex nested MenuObjects 3`] = `22`;
 
-exports[`json import create should create complex nested MenuObjects 4`] = `4`;
+exports[`json import create should create complex nested MenuObjects 4`] = `22`;
 
-exports[`json import create should create complex nested MenuObjects 5`] = `4`;
+exports[`json import create should create complex nested MenuObjects 5`] = `22`;
 
 exports[`json import create should create many items 1`] = `9`;
 
@@ -30,15 +30,15 @@ exports[`json import create should create many options 1`] = `11`;
 
 exports[`json import create should create many sections 1`] = `8`;
 
-exports[`json import create should create nested MenuObjects 1`] = `3`;
+exports[`json import create should create nested MenuObjects 1`] = `7`;
 
-exports[`json import create should create nested MenuObjects 2`] = `3`;
+exports[`json import create should create nested MenuObjects 2`] = `7`;
 
-exports[`json import create should create nested MenuObjects 3`] = `3`;
+exports[`json import create should create nested MenuObjects 3`] = `7`;
 
-exports[`json import create should create nested MenuObjects 4`] = `3`;
+exports[`json import create should create nested MenuObjects 4`] = `7`;
 
-exports[`json import create should create nested MenuObjects 5`] = `3`;
+exports[`json import create should create nested MenuObjects 5`] = `7`;
 
 exports[`json import delete should delete an option 1`] = `7`;
 
@@ -46,11 +46,11 @@ exports[`json import delete should delete an option 2`] = `7`;
 
 exports[`json import delete should delete an optionGroup 1`] = `8`;
 
-exports[`json import delete should not allow deleting a menu 1`] = `"ERROR: Cannot delete objects of type menus! Try updating it's isAvailable flag instead"`;
+exports[`json import delete should not allow deleting a menu 1`] = `[Error: ERROR: Cannot delete objects of type menus! Try updating it's isAvailable flag instead]`;
 
-exports[`json import delete should not allow deleting a section 1`] = `"ERROR: Cannot delete objects of type sections! Try updating it's isAvailable flag instead"`;
+exports[`json import delete should not allow deleting a section 1`] = `[Error: ERROR: Cannot delete objects of type sections! Try updating it's isAvailable flag instead]`;
 
-exports[`json import delete should not allow deleting an item 1`] = `"ERROR: Cannot delete objects of type items! Try updating it's isAvailable flag instead"`;
+exports[`json import delete should not allow deleting an item 1`] = `[Error: ERROR: Cannot delete objects of type items! Try updating it's isAvailable flag instead]`;
 
 exports[`json import update should update item 1`] = `5`;
 
