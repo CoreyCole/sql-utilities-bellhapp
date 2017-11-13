@@ -1,6 +1,6 @@
 import * as mysql from 'mysql';
 
-import { exportScripts } from '../src/export';
+import { exportScripts } from '../export';
 
 const RESTAURANT_NAME = 'Cedars';
 const CONFIG = require('../src/config.json');

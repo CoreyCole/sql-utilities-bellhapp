@@ -90,8 +90,9 @@ var importScripts;
                 .concat(outputCreate(jsonDiff[uid], objectType, parentUid));
         }
         else if (isDeletedChild(uid)) {
-            if (objectType !== 'optionGroups' && objectType !== 'options')
-                throw `ERROR: Cannot delete objects of type ${objectType}! Try updating it's isAvailable flag instead`;
+            if (objectType !== 'optionGroups' && objectType !== 'options') {
+                throw new Error(`ERROR: Cannot delete objects of type ${objectType}! Try updating it's isAvailable flag instead`);
+            }
             statements = [`/** Delete ${printType}: ${jsonDiff[uid].name} */`]
                 .concat(outputDelete(jsonDiff, objectType, uid));
         }
@@ -124,8 +125,9 @@ var importScripts;
             const childType = mapToChildType(objectType);
             statements.push(outputStoredProcedure(newChildCopy, objectType));
             // recursion where base case is childType === null (optionGroupOptions have no child)
-            if (childType && newChildCopy[childType] && newChildCopy[childType]['uuid()'])
+            if (childType && newChildCopy[childType] && newChildCopy[childType]['uuid()']) {
                 statements = statements.concat(outputCreate(newChildCopy[childType]['uuid()'], childType, uid));
+            }
         }
         return statements;
     }
@@ -187,7 +189,7 @@ var importScripts;
                 return spDelete ? spTemplates_1.spTemplates.deleteOptionGroupOption(obj.uid) :
                     spTemplates_1.spTemplates.addOptionGroupOption(obj.isDefault, obj.name, obj.rank, obj.uid, obj.value, obj.__parent);
             }
-            default: throw `objectType: ${objectType} not recognized`;
+            default: throw new Error(`objectType: ${objectType} not recognized`);
         }
     }
     /**

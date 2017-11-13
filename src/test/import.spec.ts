@@ -1,8 +1,8 @@
 import * as deepcopy from 'deepcopy';
 
-import { importScripts } from '../src/import';
-import { RestaurantLocation } from '../src/models';
-import { spTemplates } from '../src/spTemplates';
+import { importScripts } from '../import';
+import { RestaurantLocation } from '../models';
+import { spTemplates } from '../spTemplates';
 
 const JSON_FILE = './exports/export-simple.json';
 const MENU_UID = 'e5bd5cdb-5c58-40ec-8f96-f1f158687e7c';
