@@ -1,6 +1,4 @@
 import * as deepcopy from 'deepcopy';
-import * as uuid from 'uuid';
-import * as util from 'util';
 
 import { importScripts } from '../src/import';
 import { RestaurantLocation } from '../src/models';
@@ -231,11 +229,13 @@ describe('json import', () => {
       delete jsonObjCopy.menus[MENU_UID];
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       let err;
+      let sqlOut;
       try {
-        const sqlOut = importScripts.parseDiff(jsonObjCopy, diff);
+        sqlOut = importScripts.parseDiff(jsonObjCopy, diff);
       } catch (e) {
         err = e;
       }
+      expect(sqlOut).toBeUndefined();
       expect(err).toBeDefined();
       expect(err).toMatchSnapshot();
     });
@@ -244,11 +244,13 @@ describe('json import', () => {
       delete jsonObjCopy.menus[MENU_UID].sections[SECTION_UID];
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       let err;
+      let sqlOut;
       try {
-        const sqlOut = importScripts.parseDiff(jsonObjCopy, diff);
+        sqlOut = importScripts.parseDiff(jsonObjCopy, diff);
       } catch (e) {
         err = e;
       }
+      expect(sqlOut).toBeUndefined();
       expect(err).toBeDefined();
       expect(err).toMatchSnapshot();
     });
@@ -257,11 +259,13 @@ describe('json import', () => {
       delete jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID];
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       let err;
+      let sqlOut;
       try {
-        const sqlOut = importScripts.parseDiff(jsonObjCopy, diff);
+        sqlOut = importScripts.parseDiff(jsonObjCopy, diff);
       } catch (e) {
         err = e;
       }
+      expect(sqlOut).toBeUndefined();
       expect(err).toBeDefined();
       expect(err).toMatchSnapshot();
     });
@@ -386,7 +390,7 @@ function createNewOptions (n: number) {
  * @param objProto
  */
 function createArr (n: number, objProto: any): any[] {
-  let arr = [];
+  let arr: any[] = [];
   for (let i = 0; i < n; i++) {
     const objCopy = { ...objProto };
     objCopy.rank = i;
