@@ -1,5 +1,5 @@
-import * as sql from 'sql'
-sql.setDialect('mysql')
+import * as sql from 'sql';
+sql.setDialect('mysql');
 
 export namespace schema {
   export const ITEM = sql.define({
@@ -16,7 +16,7 @@ export namespace schema {
       'menuSectionId',
       'thumbnailImageUrl'
     ]
-  })
+  });
   export const OPTION_GROUP = sql.define({
     name: 'OPTION_GROUP',
     schema: 'restaurant',
@@ -28,7 +28,7 @@ export namespace schema {
       'itemId',
       'optionGroupTypeId'
     ]
-  })
+  });
   export const OPTION_GROUP_TYPE = sql.define({
     name: 'OPTION_GROUP_TYPE',
     schema: 'restaurant',
@@ -41,7 +41,7 @@ export namespace schema {
         property: 'type' // need to do this so it doesn't collide on optionGroup.name
       }
     ]
-  })
+  });
   export const OPTION_GROUP_OPTION = sql.define({
     name: 'OPTION_GROUP_OPTION',
     schema: 'restaurant',
@@ -54,7 +54,7 @@ export namespace schema {
       'isDefault',
       'optionGroupId'
     ]
-  })
+  });
   export const MENU_SECTION = sql.define({
     name: 'MENU_SECTION',
     schema: 'restaurant',
@@ -66,7 +66,7 @@ export namespace schema {
       'ageLimit',
       'menuId'
     ]
-  })
+  });
   export const MENU = sql.define({
     name: 'MENU',
     schema: 'restaurant',
@@ -80,7 +80,7 @@ export namespace schema {
       'end',
       'restaurantLocationId'
     ]
-  })
+  });
   export const RESTAURANT_LOCATION = sql.define({
     name: 'RESTAURANT_LOCATION',
     schema: 'restaurant',
@@ -92,7 +92,7 @@ export namespace schema {
       'posSystemId',
       'timezoneId'
     ]
-  })
+  });
   export const RESTAURANT = sql.define({
     name: 'RESTAURANT',
     schema: 'restaurant',
@@ -106,5 +106,5 @@ export namespace schema {
       'website',
       'isActive'
     ]
-  })
+  });
 }

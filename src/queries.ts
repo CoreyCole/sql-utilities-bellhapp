@@ -1,14 +1,14 @@
-import * as Promise from 'bluebird'
+import * as Promise from 'bluebird';
 
-const schema = require('./schema').schema
-const RESTAURANT = schema.RESTAURANT
-const RESTAURANT_LOCATION = schema.RESTAURANT_LOCATION
-const MENU = schema.MENU
-const MENU_SECTION = schema.MENU_SECTION
-const ITEM = schema.ITEM
-const OPTION_GROUP = schema.OPTION_GROUP
-const OPTION_GROUP_OPTION = schema.OPTION_GROUP_OPTION
-const OPTION_GROUP_TYPE = schema.OPTION_GROUP_TYPE
+const schema = require('./schema').schema;
+const RESTAURANT = schema.RESTAURANT;
+const RESTAURANT_LOCATION = schema.RESTAURANT_LOCATION;
+const MENU = schema.MENU;
+const MENU_SECTION = schema.MENU_SECTION;
+const ITEM = schema.ITEM;
+const OPTION_GROUP = schema.OPTION_GROUP;
+const OPTION_GROUP_OPTION = schema.OPTION_GROUP_OPTION;
+const OPTION_GROUP_TYPE = schema.OPTION_GROUP_TYPE;
 
 export namespace queries {
   export function getRestaurantLocation (connection, restaurantName) {
@@ -17,14 +17,14 @@ export namespace queries {
       .from(RESTAURANT_LOCATION
         .join(RESTAURANT).on(RESTAURANT.id.equals(RESTAURANT_LOCATION.restaurantId)))
       .where(RESTAURANT.name.equals(restaurantName))
-      .toQuery()
+      .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
-        if (err) reject(err)
-        if (!rows || rows.length === 0) reject(`ERROR: Restaurant not found with name: ${restaurantName}`)
-        resolve(rows[0])
-      })
-    })
+        if (err) reject(err);
+        if (!rows || rows.length === 0) reject(`ERROR: Restaurant not found with name: ${restaurantName}`);
+        resolve(rows[0]);
+      });
+    });
   }
   export function getMenus (connection, rlid) {
     const query = MENU.select(
@@ -32,14 +32,14 @@ export namespace queries {
       .from(MENU)
       .where(MENU.restaurantLocationId.equals(rlid))
       .order(MENU.rank)
-      .toQuery()
+      .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
-        if (err) reject(err)
-        if (!rows || rows.length === 0) reject(`ERROR: No menus found for restaurant location with id: ${rlid}`)
-        resolve(rows)
-      })
-    })
+        if (err) reject(err);
+        if (!rows || rows.length === 0) reject(`ERROR: No menus found for restaurant location with id: ${rlid}`);
+        resolve(rows);
+      });
+    });
   }
   export function getMenuSections (connection, mid) {
     const query = MENU_SECTION.select(
@@ -47,14 +47,14 @@ export namespace queries {
       .from(MENU_SECTION)
       .where(MENU_SECTION.menuId.equals(mid))
       .order(MENU_SECTION.rank)
-      .toQuery()
+      .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
-        if (err) reject(err)
-        if (!rows || rows.length === 0) reject(`ERROR: No menu sections found for menu with id: ${mid}`)
-        resolve(rows)
-      })
-    })
+        if (err) reject(err);
+        if (!rows || rows.length === 0) reject(`ERROR: No menu sections found for menu with id: ${mid}`);
+        resolve(rows);
+      });
+    });
   }
   export function getMenuSectionItems (connection, msid) {
     const query = ITEM.select(
@@ -62,14 +62,14 @@ export namespace queries {
       .from(ITEM)
       .where(ITEM.menuSectionId.equals(msid))
       .order(ITEM.rank)
-      .toQuery()
+      .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
-        if (err) reject(err)
-        if (!rows || rows.length === 0) reject(`ERROR: No items found for menu section with id: ${msid}`)
-        resolve(rows)
-      })
-    })
+        if (err) reject(err);
+        if (!rows || rows.length === 0) reject(`ERROR: No items found for menu section with id: ${msid}`);
+        resolve(rows);
+      });
+    });
   }
   export function getItemOptionGroups (connection, iid) {
     const query = OPTION_GROUP.select(
@@ -78,13 +78,13 @@ export namespace queries {
         .join(OPTION_GROUP_TYPE).on(OPTION_GROUP_TYPE.id.equals(OPTION_GROUP.optionGroupTypeId)))
       .where(OPTION_GROUP.itemId.equals(iid))
       .order(OPTION_GROUP.rank)
-      .toQuery()
+      .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
-        if (err) reject(err)
-        resolve(rows)
-      })
-    })
+        if (err) reject(err);
+        resolve(rows);
+      });
+    });
   }
   export function getItemOptionGroupOptions (connection, ogid) {
     const query = OPTION_GROUP_OPTION.select(
@@ -92,13 +92,13 @@ export namespace queries {
       .from(OPTION_GROUP_OPTION)
       .where(OPTION_GROUP_OPTION.optionGroupId.equals(ogid))
       .order(OPTION_GROUP_OPTION.rank)
-      .toQuery()
+      .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
-        if (err) reject(err)
-        if (!rows || rows.length === 0) reject(`ERROR: No option group options found for option group with id: ${ogid}`)
-        resolve(rows)
-      })
-    })
+        if (err) reject(err);
+        if (!rows || rows.length === 0) reject(`ERROR: No option group options found for option group with id: ${ogid}`);
+        resolve(rows);
+      });
+    });
   }
 }

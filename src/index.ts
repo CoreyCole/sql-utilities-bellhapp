@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-import * as program from 'commander'
-import * as mysql from 'mysql'
+import * as program from 'commander';
+import * as mysql from 'mysql';
 
-import { exportScripts } from './export'
-import { importScripts } from './import'
+import { exportScripts } from './export';
+import { importScripts } from './import';
 
-const config = require('../src/config.json')
+const config = require('../src/config.json');
 
 program
   .arguments('<command>')
@@ -17,33 +17,33 @@ program
   .action(async (command, options) => {
     switch (command) {
       case 'export': {
-        if (!options.restaurantName) failAndOutputHelp('No restaurant name given!')
-        const connection = mysql.createConnection(config)
+        if (!options.restaurantName) failAndOutputHelp('No restaurant name given!');
+        const connection = mysql.createConnection(config);
         exportScripts.getRestaurantLocation(connection, options.restaurantName)
           .then(rlJson => {
-            exportScripts.writeJsonToFile(rlJson, options.exportPath ? options.exportPath : './build/exports')
-            process.exit()
+            exportScripts.writeJsonToFile(rlJson, options.exportPath ? options.exportPath : './build/exports');
+            process.exit();
           })
-          .catch(err => failAndOutputHelp(`Failed to query database: ${err}`))
-        break
+          .catch(err => failAndOutputHelp(`Failed to query database: ${err}`));
+        break;
       }
       case 'import': {
-        if (!options.oldJson) failAndOutputHelp('No old json file name given!')
-        if (!options.newJson) failAndOutputHelp('No new json file name given!')
-        const oldJson = require(`../${options.oldJson}`)
-        const newJson = require(`../${options.newJson}`)
-        const diff = importScripts.getDiff(oldJson, newJson)
-        const sqlStatements = importScripts.parseDiff(newJson, diff)
-        importScripts.writeSqlToFile(sqlStatements, options.importPath ? options.importPath : './build/imports')
-        break
+        if (!options.oldJson) failAndOutputHelp('No old json file name given!');
+        if (!options.newJson) failAndOutputHelp('No new json file name given!');
+        const oldJson = require(`../${options.oldJson}`);
+        const newJson = require(`../${options.newJson}`);
+        const diff = importScripts.getDiff(oldJson, newJson);
+        const sqlStatements = importScripts.parseDiff(newJson, diff);
+        importScripts.writeSqlToFile(sqlStatements, options.importPath ? options.importPath : './build/imports');
+        break;
       }
-      default: failAndOutputHelp('No command given!')
+      default: failAndOutputHelp('No command given!');
     }
   })
-  .parse(process.argv)
+  .parse(process.argv);
 
-function failAndOutputHelp(msg) {
-  console.error(msg)
-  program.outputHelp()
-  process.exit(1)
+function failAndOutputHelp (msg) {
+  console.error(msg);
+  program.outputHelp();
+  process.exit(1);
 }
