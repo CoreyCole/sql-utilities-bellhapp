@@ -3,25 +3,11 @@ import * as prettyJSONStringify from 'pretty-json-stringify';
 import * as moment from 'moment';
 
 import { queries } from './queries';
-// const config = require('./config.json')
-// const connection = mysql.createConnection(config)
-
-// const EXPORT_TIME = moment()
-// const RESTAURANT_NAME = 'Cedars'
-// const EXPORT_FILE_PATH = './exports/'
-// const EXPORT_FILE_NAME = `${EXPORT_FILE_PATH}export-${EXPORT_TIME.format('YYYY-MM-DD-HH:mm:ss')}.json`
-// shelljs.mkdir(EXPORT_FILE_PATH)
-// shelljs.touch(EXPORT_FILE_NAME)
-// console.log(`Exporting from database on ${EXPORT_TIME.format('MMMM Do YYYY, h:mm:ss a')} . . .`)
 
 const rejectHandler = (err) => {
   console.error(err);
   throw err;
 };
-
-// getRestaurantLocation(RESTAURANT_NAME, EXPORT_TIME)
-//   .then(restaurantLocation => exportJSON(restaurantLocation, EXPORT_FILE_NAME, EXPORT_TIME.format('MMMM Do YYYY, h:mm:ss a')))
-//   .catch(rejectHandler)
 
 export namespace exportScripts {
   /**
