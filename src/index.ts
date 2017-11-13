@@ -9,13 +9,19 @@ const config = require('../src/config.json');
 
 program
   .arguments('<command>')
-  .option('-r, --restaurantName <restaurantName>', 'The name of the restaurant to export')
+  .option('-r, --restaurantName <restaurantName>', 'The name of the restaurant')
   .option('-e, --exportPath [exportPath]', 'Optional export location, defaults to ./build/exports')
   .option('-o, --oldJson <oldJson>', 'The originally exported json file')
   .option('-n, --newJson <newJson>', 'The edited json file')
   .option('-i, --importPath [importPath]', 'Optional import location, defaults to ./build/imports')
+  .option('-s, --searchName <searchName>', 'The partial name of what you want to search for in the menu for the given restaurant')
+  .option('-u, --uid <uid>', 'The uid of the menu item you want to upload an image for')
   .action(async (command, options) => {
     switch (command) {
+      case '': {
+        failAndOutputHelp('No command given!');
+        break;
+      }
       case 'export': {
         if (!options.restaurantName) failAndOutputHelp('No restaurant name given!');
         const connection = mysql.createConnection(config);
@@ -35,6 +41,11 @@ program
         const diff = importScripts.getDiff(oldJson, newJson);
         const sqlStatements = importScripts.parseDiff(newJson, diff);
         importScripts.writeSqlToFile(sqlStatements, options.importPath ? options.importPath : './build/imports');
+        break;
+      }
+      case 'upload': {
+        if (!options.restaurantName) failAndOutputHelp('No restaurant name given!');
+        if (!options.searchName) failAndOutputHelp('No search name given!');
         break;
       }
       default: failAndOutputHelp(`Command ${command} not understood!`);
