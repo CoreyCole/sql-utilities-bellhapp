@@ -37,7 +37,7 @@ program
         importScripts.writeSqlToFile(sqlStatements, options.importPath ? options.importPath : './build/imports');
         break;
       }
-      default: failAndOutputHelp('No command given!');
+      default: failAndOutputHelp(`Command ${command} not understood!`);
     }
   })
   .parse(process.argv);
