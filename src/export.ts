@@ -16,7 +16,7 @@ export namespace exportScripts {
    * @param {string} restaurantName
    */
   export async function getRestaurantLocation (connection, restaurantName) {
-    const exportTime = moment().format('YYYY-MM-DD-HH:mm:ss');
+    const exportTime = moment().format('YYYY-MM-DD-HH-mm-ss');
     const restaurantLocationRow = await queries.getRestaurantLocation(connection, restaurantName).catch(rejectHandler);
     const restaurantLocation = { _exportDate: exportTime, ...restaurantLocationRow };
     restaurantLocation.menus = {};
