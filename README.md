@@ -15,7 +15,7 @@ The purpose of this repository is to make it easier to do CRUD operations on the
 - run `npm install -g` to add command `bh-sql` to your global node commands
 
 ## Usage
-**Make sure to run commands from root of repo to make sure file paths work**
+**Make sure to run commands from root of repo so file paths work**
 ```
   Usage: bh-sql <command> [options]
 
@@ -50,7 +50,7 @@ bh-sql search --restaurantName Cedars --searchName tikka
 #### Process and upload image to S3 using itemUid from search
 This will process and upload an image to S3 and output the commands required to attach that image to the item in the database
 ```
-bh-sql uploadImage --uid <itemUid> --imagePath <pathToImage>
+bh-sql uploadImage --restaurantUid <restaurantUid> --itemUid <itemUid> --imagePath <pathToImage>
 ```
 
 ### Exporting from database to JSON
