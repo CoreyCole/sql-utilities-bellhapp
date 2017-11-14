@@ -6,8 +6,8 @@
   "license": "ISC",
   "scripts": {
     "test": "jest",
-    "test-watch": "jest --watchAll",
-    "clean": "find ./build/exports/ -type f -name '*.json' -delete && find ./build/imports/ -type f -name '*.sql' -delete",
+    "test-watch": "jest --watch",
+    "clean": "rm -rf ./build",
     "lint": "tslint --project .",
     "compile": "npm run lint && tsc -p ."
   },
@@ -29,11 +29,13 @@
     ]
   },
   "dependencies": {
+    "@types/shelljs": "0.7.6",
     "bluebird": "3.5.1",
     "deepcopy": "0.6.3",
     "json-diff": "0.5.2",
     "moment": "2.19.1",
     "mysql": "2.15.0",
+    "path": "0.12.7",
     "pretty-json-stringify": "0.0.2",
     "shelljs": "0.7.8",
     "sql": "0.78.0",
@@ -46,7 +48,6 @@
     "@types/mysql": "2.15.0",
     "@types/node": "8.0.47",
     "jest": "21.2.1",
-    "nodemon": "1.12.1",
     "ts-jest": "21.1.4",
     "tslint": "5.8.0",
     "tslint-config-standard": "7.0.0",
