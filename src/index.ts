@@ -1,21 +1,32 @@
 #!/usr/bin/env node
 import * as program from 'commander';
 import * as mysql from 'mysql';
+import * as prettyJSONStringify from 'pretty-json-stringify';
+import * as uuid from 'uuid';
+import * as shell from 'shelljs';
 
 import { exportScripts } from './export';
 import { importScripts } from './import';
+import { uploadImageScripts } from './uploadImages';
 
 const config = require('../src/config.json');
 
 program
   .arguments('<command>')
   .option('-r, --restaurantName <restaurantName>', 'The name of the restaurant')
+  // for exporting
   .option('-e, --exportPath [exportPath]', 'Optional export location, defaults to ./build/exports')
+  // for importing
   .option('-o, --oldJson <oldJson>', 'The originally exported json file')
   .option('-n, --newJson <newJson>', 'The edited json file')
-  .option('-i, --importPath [importPath]', 'Optional import location, defaults to ./build/imports')
+  .option('-O, --sqlOutImportPath [sqlOutImportPath]', 'Optional import location, defaults to ./build/imports')
+  // for search
   .option('-s, --searchName <searchName>', 'The partial name of what you want to search for in the menu for the given restaurant')
-  .option('-u, --uid <uid>', 'The uid of the menu item you want to upload an image for')
+  // for uploading images
+  .option('-R, --restaurantUid <restaurantUid>', 'The restaurant location uid for the image upload')
+  .option('-I, --itemUid <itemUid>', 'The uid of the item you want to upload an image for')
+  .option('-i, --imagePath <imagePath>', 'The path to the image you want to upload')
+  .option('-d, --dryRun [dryRun]', 'Optional flag to run upload without actually uploading to s3 (for testing)')
   .action(async (command, options) => {
     switch (command) {
       case '': {
@@ -24,10 +35,14 @@ program
       }
       case 'export': {
         if (!options.restaurantName) failAndOutputHelp('No restaurant name given!');
+        console.log(`Querying entire ${options.restaurantName} menu . . .`);
         const connection = mysql.createConnection(config);
+        const defaultExportPath = './build/exports';
+        const exportPath = options.exportPath ? options.exportPath : defaultExportPath;
+        if (exportPath === defaultExportPath) shell.mkdir('-p', defaultExportPath);
         exportScripts.getRestaurantLocation(connection, options.restaurantName)
           .then(rlJson => {
-            exportScripts.writeJsonToFile(rlJson, options.exportPath ? options.exportPath : './build/exports');
+            exportScripts.writeJsonToFile(rlJson, exportPath);
             process.exit();
           })
           .catch(err => failAndOutputHelp(`Failed to query database: ${err}`));
@@ -43,9 +58,29 @@ program
         importScripts.writeSqlToFile(sqlStatements, options.importPath ? options.importPath : './build/imports');
         break;
       }
-      case 'upload': {
+      case 'search': {
         if (!options.restaurantName) failAndOutputHelp('No restaurant name given!');
         if (!options.searchName) failAndOutputHelp('No search name given!');
+        const connection = mysql.createConnection(config);
+        uploadImageScripts.searchRestaurantMenu(connection, options.restaurantName, options.searchName)
+          .then(matches => {
+            console.log(prettyJSONStringify(matches));
+            process.exit();
+          })
+          .catch(err => failAndOutputHelp(`Failed to query database: ${err}`));
+        break;
+      }
+      case 'uploadImage': {
+        if (!options.restaurantUid) failAndOutputHelp('No restaurant uid given!');
+        if (!options.itemUid) failAndOutputHelp('No item uid given!');
+        if (!options.imagePath) failAndOutputHelp('No image path given!');
+        const newImageUid = uuid();
+        console.log(`uploading image with uid ${newImageUid} . . .`);
+        console.log(
+          uploadImageScripts.uploadAndGetSql(
+            options.imagePath, options.itemUid, options.restaurantUid, newImageUid, options.dryRun
+          )
+        );
         break;
       }
       default: failAndOutputHelp(`Command ${command} not understood!`);

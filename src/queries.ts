@@ -13,10 +13,10 @@ const OPTION_GROUP_TYPE = schema.OPTION_GROUP_TYPE;
 export namespace queries {
   export function getRestaurantLocation (connection, restaurantName) {
     const query = RESTAURANT_LOCATION.select(
-        RESTAURANT_LOCATION.id, RESTAURANT_LOCATION.uid, RESTAURANT.name, RESTAURANT.description, RESTAURANT.phone, RESTAURANT.email, RESTAURANT.website)
+        RESTAURANT_LOCATION.id, RESTAURANT_LOCATION.uid, RESTAURANT.restaurantName, RESTAURANT.description, RESTAURANT.phone, RESTAURANT.email, RESTAURANT.website)
       .from(RESTAURANT_LOCATION
         .join(RESTAURANT).on(RESTAURANT.id.equals(RESTAURANT_LOCATION.restaurantId)))
-      .where(RESTAURANT.name.equals(restaurantName))
+      .where(RESTAURANT.restaurantName.equals(restaurantName))
       .toQuery();
     return new Promise((resolve, reject) => {
       connection.query(query.text, query.values, (err, rows) => {
@@ -28,7 +28,7 @@ export namespace queries {
   }
   export function getMenus (connection, rlid) {
     const query = MENU.select(
-        MENU.id, MENU.uid, MENU.rank, MENU.name, MENU.isAvailable, MENU.start, MENU.end)
+        MENU.id, MENU.uid, MENU.rank, MENU.menuName, MENU.isAvailable, MENU.start, MENU.end)
       .from(MENU)
       .where(MENU.restaurantLocationId.equals(rlid))
       .order(MENU.rank)
@@ -43,7 +43,7 @@ export namespace queries {
   }
   export function getMenuSections (connection, mid) {
     const query = MENU_SECTION.select(
-        MENU_SECTION.id, MENU_SECTION.uid, MENU_SECTION.rank, MENU_SECTION.name, MENU_SECTION.ageLimit)
+        MENU_SECTION.id, MENU_SECTION.uid, MENU_SECTION.rank, MENU_SECTION.sectionName, MENU_SECTION.ageLimit)
       .from(MENU_SECTION)
       .where(MENU_SECTION.menuId.equals(mid))
       .order(MENU_SECTION.rank)
@@ -58,7 +58,7 @@ export namespace queries {
   }
   export function getMenuSectionItems (connection, msid) {
     const query = ITEM.select(
-        ITEM.id, ITEM.uid, ITEM.rank, ITEM.name, ITEM.description, ITEM.price, ITEM.isAvailable)
+        ITEM.id, ITEM.uid, ITEM.rank, ITEM.itemName, ITEM.description, ITEM.price, ITEM.isAvailable)
       .from(ITEM)
       .where(ITEM.menuSectionId.equals(msid))
       .order(ITEM.rank)
@@ -73,7 +73,7 @@ export namespace queries {
   }
   export function getItemOptionGroups (connection, iid) {
     const query = OPTION_GROUP.select(
-        OPTION_GROUP.id, OPTION_GROUP.uid, OPTION_GROUP.name, OPTION_GROUP.rank, OPTION_GROUP_TYPE.type)
+        OPTION_GROUP.id, OPTION_GROUP.uid, OPTION_GROUP.optionGroupName, OPTION_GROUP.rank, OPTION_GROUP_TYPE.type)
       .from(OPTION_GROUP
         .join(OPTION_GROUP_TYPE).on(OPTION_GROUP_TYPE.id.equals(OPTION_GROUP.optionGroupTypeId)))
       .where(OPTION_GROUP.itemId.equals(iid))
@@ -88,7 +88,7 @@ export namespace queries {
   }
   export function getItemOptionGroupOptions (connection, ogid) {
     const query = OPTION_GROUP_OPTION.select(
-        OPTION_GROUP_OPTION.id, OPTION_GROUP_OPTION.uid, OPTION_GROUP_OPTION.name, OPTION_GROUP_OPTION.rank, OPTION_GROUP_OPTION.value, OPTION_GROUP_OPTION.isDefault)
+        OPTION_GROUP_OPTION.id, OPTION_GROUP_OPTION.uid, OPTION_GROUP_OPTION.optionGroupOptionName, OPTION_GROUP_OPTION.rank, OPTION_GROUP_OPTION.value, OPTION_GROUP_OPTION.isDefault)
       .from(OPTION_GROUP_OPTION)
       .where(OPTION_GROUP_OPTION.optionGroupId.equals(ogid))
       .order(OPTION_GROUP_OPTION.rank)
@@ -98,6 +98,39 @@ export namespace queries {
         if (err) reject(err);
         if (!rows || rows.length === 0) reject(`ERROR: No option group options found for option group with id: ${ogid}`);
         resolve(rows);
+      });
+    });
+  }
+  export function getItemMatches (connection, restaurantName, searchName) {
+    const query = ITEM.select(
+        ITEM.uid, ITEM.itemName, ITEM.price, ITEM.thumbnailImageUrl, MENU_SECTION.sectionName, MENU.menuName)
+      .from(ITEM
+        .join(MENU_SECTION).on(MENU_SECTION.id.equals(ITEM.menuSectionId))
+        .join(MENU).on(MENU.id.equals(MENU_SECTION.menuId))
+        .join(RESTAURANT_LOCATION).on(RESTAURANT_LOCATION.id.equals(MENU.restaurantLocationId))
+        .join(RESTAURANT).on(RESTAURANT.id.equals(RESTAURANT_LOCATION.restaurantId)))
+      .where(ITEM.itemName.like(`%${searchName}%`)
+        .and(RESTAURANT.restaurantName.equals(restaurantName)))
+      .toQuery();
+    return new Promise((resolve, reject) => {
+      connection.query(query.text, query.values, (err, rows) => {
+        if (err) reject(err);
+        if (!rows || rows.length === 0) reject(`ERROR: Nothing found in ${restaurantName} that matches ${searchName}`);
+        resolve(rows);
+      });
+    });
+  }
+  export function getRluid (connection, restaurantName) {
+    const query = RESTAURANT_LOCATION.select(RESTAURANT_LOCATION.uid)
+      .from(RESTAURANT_LOCATION
+        .join(RESTAURANT).on(RESTAURANT.id.equals(RESTAURANT_LOCATION.restaurantId)))
+      .where(RESTAURANT.restaurantName.equals(restaurantName))
+      .toQuery();
+    return new Promise((resolve, reject) => {
+      connection.query(query.text, query.values, (err, row) => {
+        if (err) reject(err);
+        if (!row || row.length === 0) reject(`ERROR: No restaurant found with name ${restaurantName}`);
+        resolve(row);
       });
     });
   }

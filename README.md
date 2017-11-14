@@ -11,49 +11,75 @@ The purpose of this repository is to make it easier to do CRUD operations on the
 - clone the repository
 - run `npm install` or `yarn` in the cloned dir to install dependencies
 - add `src/config.json` for database credentials
+- run `npm run compile` to build from source
+- run `npm install -g` to add command `bh-sql` to your global node commands
 
 ## Usage
-**Make sure to run commands from root of repo (`node src/export.js`) to make sure file paths work**
+**Make sure to run commands from root of repo to make sure file paths work**
 ```
-  Usage: index [options] <command>
+  Usage: bh-sql <command> [options]
+
+  Command:
+    search
+    uploadImage
+    export
+    import
 
   Options:
-    -r, --restaurantName <restaurantName>  The name of the restaurant to export
-    -e, --exportPath [exportPath]          Optional export location, defaults to ./build/exports
-    -o, --oldJson <oldJson>                The originally exported json file
-    -n, --newJson <newJson>                The edited json file
-    -i, --importPath [importPath]          Optional import location, defaults to ./build/imports
-    -h, --help                             output usage information
+    -r, --restaurantName <restaurantName>      The name of the restaurant
+    -e, --exportPath [exportPath]              Optional export location, defaults to ./build/exports
+    -o, --oldJson <oldJson>                    The originally exported json file
+    -n, --newJson <newJson>                    The edited json file
+    -O, --sqlOutImportPath [sqlOutImportPath]  Optional import location, defaults to ./build/imports
+    -s, --searchName <searchName>              The partial name of what you want to search for in the menu for the given restaurant
+    -R, --restaurantUid <restaurantUid>        The restaurant location uid for the image upload
+    -I, --itemUid <itemUid>                    The uid of the item you want to upload an image for
+    -i, --imagePath <imagePath>                The path to the image you want to upload
+    -d, --dryRun [dryRun]                      Optional flag to run upload without actually uploading to s3 (for testing)
+    -h, --help                                 output usage information
 ```
 
 ## Examples
+### Uploading images to S3
+#### Search restaurant menu for items by name (get uid)
+This is output everything from Cedars menu that has a name like `"tikka"`
+```
+bh-sql search --restaurantName Cedars --searchName tikka
+```
+
+#### Process and upload image to S3 using itemUid from search
+This will process and upload an image to S3 and output the commands required to attach that image to the item in the database
+```
+bh-sql uploadImage --uid <itemUid> --imagePath <pathToImage>
+```
+
 ### Exporting from database to JSON
 This will output a JSON file to `build/exports/` with the current state of the menu for restaurant `"Cedars"`
 ```shell
-node src/index.js export --restaurantName Cedars
+bh-sql export --restaurantName Cedars
 ```
 
 ### Importing to database from JSON
 This will compare oldJson to newJson and output a SQL file to `build/imports/` based on the differences between them.
 **Make sure to keep a copy of the original export so the import script can do a diff.**
 ```shell
-node build/index.js import --oldJson ./build/exports/export-2017-11-02-00-28-54.json --newJson ./build/exports/export-changes.json
+bh-sql import --oldJson ./build/exports/export-2017-11-02-00-28-54.json --newJson ./build/exports/export-changes.json
 ```
 
 Full steps:
 ```shell
 # generate a fresh export from the database
-node src/index.js export -r Cedars
+bh-sql export -r Cedars
 
 # make an exact copy of that new export
-cp exports/<new-exported-file>.json exports/export-changes.json
+cp build/exports/<new-exported-file>.json exports/export-changes.json
 
 # make your changes to exports/export-changes.json
 # check your diff using json-diff (npm install -g json-diff)
-json-diff exports/<new-exported-file>.json exports/export-changes.json
+json-diff build/exports/<new-exported-file>.json exports/export-changes.json
 
 # then run the import script
-node build/index.js import -o ./build/exports/export-2017-11-02-00-28-54.json -n ./build/exports/export-changes.json
+bh-sql import -o ./build/exports/export-2017-11-02-00-28-54.json -n ./build/exports/export-changes.json
 ```
 
 #### `jsonFileNew` Format

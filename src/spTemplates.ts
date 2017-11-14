@@ -25,4 +25,10 @@ export namespace spTemplates {
   export function deleteOptionGroupOption (ogouid): string {
     return `      CALL restaurant.delete_option_group_option("${ogouid}");`;
   }
+  export function addItemImage (iuid, imageUid) {
+    return `      CALL restaurant.add_item_image("${iuid}","${imageUid}");`;
+  }
+  export function updateItemThumbnail (iuid, thumbnailUrl) {
+    return `CALL restaurant.update_item_thumbnail("${iuid}","${thumbnailUrl}");`;
+  }
 }

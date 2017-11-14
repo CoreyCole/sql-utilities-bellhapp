@@ -9,7 +9,10 @@ export namespace schema {
       'id',
       'uid',
       'rank',
-      'name',
+      {
+        name: 'name',
+        property: 'itemName'
+      },
       'description',
       'price',
       'isAvailable',
@@ -23,7 +26,10 @@ export namespace schema {
     columns: [
       'id',
       'uid',
-      'name',
+      {
+        name: 'name',
+        property: 'optionGroupName'
+      },
       'rank',
       'itemId',
       'optionGroupTypeId'
@@ -48,7 +54,10 @@ export namespace schema {
     columns: [
       'id',
       'uid',
-      'name',
+      {
+        name: 'name',
+        property: 'optionGroupOptionName'
+      },
       'rank',
       'value',
       'isDefault',
@@ -62,7 +71,10 @@ export namespace schema {
       'id',
       'uid',
       'rank',
-      'name',
+      {
+        name: 'name',
+        property: 'sectionName'
+      },
       'ageLimit',
       'menuId'
     ]
@@ -74,7 +86,10 @@ export namespace schema {
       'id',
       'uid',
       'rank',
-      'name',
+      {
+        name: 'name',
+        property: 'menuName'
+      },
       'isAvailable',
       'start',
       'end',
@@ -99,7 +114,10 @@ export namespace schema {
     columns: [
       'id',
       'uid',
-      'name',
+      {
+        name: 'name',
+        property: 'restaurantName'
+      },
       'description',
       'phone',
       'email',
