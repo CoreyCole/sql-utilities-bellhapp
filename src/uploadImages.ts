@@ -31,7 +31,7 @@ export namespace uploadImageScripts {
   function uploadToS3 (imagePath: string, rluid: string, newImageUid: string) {
     const dirname = path.dirname(imagePath);
     const thumbnailName = `${newImageUid}-compressed-thumb.jpg`;
-    shell.exec(`aws s3 cp ${imagePath} s3://bellhapp-restaurant-images/${rluid}/${newImageUid}.jpg --acl public-read`);
+    shell.exec(`aws s3 cp '${imagePath}' s3://bellhapp-restaurant-images/${rluid}/${newImageUid}.jpg --acl public-read`);
     shell.exec(`aws s3 cp ${dirname}/${thumbnailName} s3://bellhapp-restaurant-images/${rluid}/thumbnails/${newImageUid}.jpg --acl public-read`);
   }
 }
