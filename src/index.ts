@@ -54,6 +54,9 @@ program
         const oldJson = require(`../${options.oldJson}`);
         const newJson = require(`../${options.newJson}`);
         const diff = importScripts.getDiff(oldJson, newJson);
+        const defaultImportPath = './build/imports';
+        const importPath = options.exportPath ? options.exportPath : defaultImportPath;
+        if (importPath === defaultImportPath) shell.mkdir('-p', defaultImportPath);
         const sqlStatements = importScripts.parseDiff(newJson, diff);
         importScripts.writeSqlToFile(sqlStatements, options.importPath ? options.importPath : './build/imports');
         break;
