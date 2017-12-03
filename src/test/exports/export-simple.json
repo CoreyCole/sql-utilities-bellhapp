@@ -2,7 +2,7 @@
   "_exportDate": "November 2nd 2017, 12:28:54 am",
   "id": 3,
   "uid": "ff3e796c-7c75-4e8d-a0fe-a851f19b7db2",
-  "name": "Cedars",
+  "restaurantName": "Cedars",
   "description": "Casual eatery offering classic Indian & Mediterranean dishes in a homey setting.",
   "phone": "2065274000",
   "email": "cedarsbrooklyn@gmail.com",
@@ -12,7 +12,7 @@
       "id": 10,
       "uid": "e5bd5cdb-5c58-40ec-8f96-f1f158687e7c",
       "rank": 0,
-      "name": "Appetizers",
+      "menuName": "Appetizers",
       "isAvailable": 1,
       "start": null,
       "end": null,
@@ -21,14 +21,14 @@
           "id": 36,
           "uid": "1dbfeab4-57cc-415c-9049-9c7efefe6012",
           "rank": 0,
-          "name": "Appetizers",
+          "sectionName": "Appetizers",
           "ageLimit": null,
           "items": {
             "9f559130-6663-11e7-860e-01f959516b44": {
               "id": 255,
               "uid": "9f559130-6663-11e7-860e-01f959516b44",
               "rank": 0,
-              "name": "Hummus",
+              "itemName": "Hummus",
               "description": "The original Middle Eastern dip of garbanzo beans, tahini sauce and a special dressing. Served with pita bread.",
               "price": 450,
               "isAvailable": 1,
@@ -36,14 +36,14 @@
                 "c8fdd022-8131-11e7-af18-28cfe91e4031": {
                   "id": 295,
                   "uid": "c8fdd022-8131-11e7-af18-28cfe91e4031",
-                  "name": "Sides",
+                  "optionGroupName": "Sides",
                   "rank": 10,
                   "type": "OPTION_ADD",
                   "options": {
                     "d599d95a-8148-11e7-abcf-06681ea214cf": {
                       "id": 1475,
                       "uid": "d599d95a-8148-11e7-abcf-06681ea214cf",
-                      "name": "Chai",
+                      "optionGroupOptionName": "Chai",
                       "rank": 0,
                       "value": 295,
                       "isDefault": 0

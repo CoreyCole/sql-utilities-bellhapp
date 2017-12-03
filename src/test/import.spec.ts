@@ -184,20 +184,20 @@ describe('json import', () => {
   describe('update', () => {
     it('should update menu', () => {
       const jsonObjCopy = deepcopy(jsonObj);
-      jsonObjCopy.menus[MENU_UID].name = 'new name';
+      jsonObjCopy.menus[MENU_UID].menuName = 'new name';
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addMenu', 1);
     });
     it('should update section', () => {
       const jsonObjCopy = deepcopy(jsonObj);
-      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].name = 'new name';
+      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].sectionName = 'new name';
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addMenu', 0);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addSection', 1);
     });
     it('should update item', () => {
       const jsonObjCopy = deepcopy(jsonObj);
-      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID].name = 'new name';
+      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID].itemName = 'new name';
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addMenu', 0);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addSection', 0);
@@ -205,7 +205,7 @@ describe('json import', () => {
     });
     it('should update optionGroup', () => {
       const jsonObjCopy = deepcopy(jsonObj);
-      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID].optionGroups[OPTION_GROUP_UID].name = 'new name';
+      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID].optionGroups[OPTION_GROUP_UID].optionGroupName = 'new name';
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addMenu', 0);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addSection', 0);
@@ -214,7 +214,7 @@ describe('json import', () => {
     });
     it('should update option', () => {
       const jsonObjCopy = deepcopy(jsonObj);
-      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID].optionGroups[OPTION_GROUP_UID].options[OPTION_UID].name = 'new name';
+      jsonObjCopy.menus[MENU_UID].sections[SECTION_UID].items[ITEM_UID].optionGroups[OPTION_GROUP_UID].options[OPTION_UID].optionGroupOptionName = 'new name';
       const diff = importScripts.getDiff(jsonObj, jsonObjCopy);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addMenu', 0);
       expectSpCallsFromDiff(diff, jsonObjCopy, 'addSection', 0);
