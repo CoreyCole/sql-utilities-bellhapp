@@ -33,6 +33,7 @@
     "bluebird": "3.5.1",
     "deepcopy": "0.6.3",
     "json-diff": "0.5.2",
+    "markdown-pdf": "^8.0.0",
     "moment": "2.19.1",
     "mysql": "2.15.0",
     "path": "0.12.7",

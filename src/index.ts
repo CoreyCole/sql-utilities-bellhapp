@@ -4,6 +4,8 @@ import * as mysql from 'mysql';
 import * as prettyJSONStringify from 'pretty-json-stringify';
 import * as uuid from 'uuid';
 import * as shell from 'shelljs';
+import * as markdownpdf from 'markdown-pdf';
+import * as path from 'path';
 
 import { exportScripts } from './export';
 import { importScripts } from './import';
@@ -16,6 +18,7 @@ program
   .option('-r, --restaurantName <restaurantName>', 'The name of the restaurant')
   // for exporting
   .option('-e, --exportPath [exportPath]', 'Optional export location, defaults to ./build/exports')
+  .option('-p, --pdfJson <pdfJson>', 'Path to exported json file to convert into a pdf')
   // for importing
   .option('-o, --oldJson <oldJson>', 'The originally exported json file')
   .option('-n, --newJson <newJson>', 'The edited json file')
@@ -46,6 +49,20 @@ program
             process.exit();
           })
           .catch(err => failAndOutputHelp(`Failed to query database: ${err}`));
+        break;
+      }
+      case 'pdf': {
+        if (!options.pdfJson) failAndOutputHelp('No export json file given!');
+        const defaultExportPath = './build/exports';
+        const exportPath = options.exportPath ? options.exportPath : defaultExportPath;
+        if (exportPath === defaultExportPath) shell.mkdir('-p', defaultExportPath);
+        const restaurantLocation = require(`../${options.pdfJson}`);
+        const pdfExportName = `${path.basename(options.pdfJson, 'json')}pdf`;
+        console.log(`Converting json file ${options.pdfJson} to PDF ${pdfExportName} . . .`);
+        const markdown = exportScripts.convertJsonToMarkdown(restaurantLocation);
+        markdownpdf().from.string(markdown).to(`${exportPath}/${pdfExportName}`, () => {
+          console.log(`Finished exporting PDF to ${exportPath}/${pdfExportName} !`);
+        });
         break;
       }
       case 'import': {

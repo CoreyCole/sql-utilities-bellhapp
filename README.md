@@ -59,6 +59,12 @@ This will output a JSON file to `build/exports/` with the current state of the m
 bh-sql export --restaurantName Cedars
 ```
 
+### Printing export to PDF
+This will convert an exported json file to a markdown pdf in `build/exports`
+```shell
+bh-sql pdf --pdfJson ./build/exports/export-2017-11-02-00-28-54.json
+```
+
 ### Importing to database from JSON
 This will compare oldJson to newJson and output a SQL file to `build/imports/` based on the differences between them.
 **Make sure to keep a copy of the original export so the import script can do a diff.**

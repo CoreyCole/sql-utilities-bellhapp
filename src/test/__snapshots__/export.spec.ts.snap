@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pdf convert should export a restaurant's json to a markdown string 1`] = `
+"<h1 style='margin:0;'>Cedars Menu</h1>
+<h2 style='margin:0;margin-top:16px;margin-bottom:-32px;'>Appetizers</h2>
+<h3 style='margin:0;margin-top:16px;margin-bottom:-16px;'>Appetizers</h3>
+$4.50 - Hummus
+* OPTION_ADD - Sides
+  * $2.95 - Chai
+
+"
+`;
