@@ -3,11 +3,11 @@
 exports[`upload images search restaurant menu should return the items from a restaurant menu like the given name 1`] = `
 Object {
   "itemMatches": Array [
-    "9f559133-6663-11e7-860e-01f959516b44 : Paneer (Farmer Cheese) Tikka : 895 : Appetizers (section) : Appetizers (menu)",
-    "9f559134-6663-11e7-860e-01f959516b44 : Fish Tikka Kabob : 895 : Appetizers (section) : Appetizers (menu)",
-    "9f55b844-6663-11e7-860e-01f959516b44 : Chicken Tikka : 895 : Appetizers (section) : Appetizers (menu)",
-    "9f55b874-6663-11e7-860e-01f959516b44 : Tandoori Chicken Tikka : 1495 : Tandoori Cuisine (section) : Tandoori Cuisine (menu)",
-    "9f55b888-6663-11e7-860e-01f959516b44 : Tikka Masala : 1195 : Indian Cuisine (section) : Indian Cuisine (menu)",
+    "9f559133-6663-11e7-860e-01f959516b44 : Paneer (Farmer Cheese) Tikka : 895 : https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/compressed-thumb-paneer-tikka.jpg : Appetizers (section) : Appetizers (menu)",
+    "9f559134-6663-11e7-860e-01f959516b44 : Fish Tikka Kabob : 895 : https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/93e41967-f94b-4c38-98d6-4848755c1652.jpg : Appetizers (section) : Appetizers (menu)",
+    "9f55b844-6663-11e7-860e-01f959516b44 : Chicken Tikka : 895 : https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/d19f8d06-f837-4393-b076-a1ab72055231.jpg : Appetizers (section) : Appetizers (menu)",
+    "9f55b874-6663-11e7-860e-01f959516b44 : Tandoori Chicken Tikka : 1495 : https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/compressed-thumb-tandoori-chicken-tikka.jpg : Tandoori Cuisine (section) : Tandoori Cuisine (menu)",
+    "9f55b888-6663-11e7-860e-01f959516b44 : Tikka Masala : 1195 : https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/compressed-thumb-tikka-masala.jpg : Indian Cuisine (section) : Indian Cuisine (menu)",
   ],
   "rluid": "ff3e796c-7c75-4e8d-a0fe-a851f19b7db2",
   "searchName": "tikka",
@@ -15,6 +15,6 @@ Object {
 `;
 
 exports[`upload images upload image should return sql statements that match the snapshot 1`] = `
-"CALL restaurant.add_item_image(\\"9f559133-6663-11e7-860e-01f959516b44\\",\\"99999999-6666-1111-8888-01f959516b44\\");
-      CALL restaurant.update_item_thumbnail(\\"9f559133-6663-11e7-860e-01f959516b44\\",\\"https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/99999999-6666-1111-8888-01f959516b44\\");"
+"      CALL restaurant.add_item_image(\\"9f559133-6663-11e7-860e-01f959516b44\\",\\"99999999-6666-1111-8888-01f959516b44\\");
+      CALL restaurant.update_item_thumbnail(\\"9f559133-6663-11e7-860e-01f959516b44\\",\\"https://s3-us-west-2.amazonaws.com/bellhapp-restaurant-images/ff3e796c-7c75-4e8d-a0fe-a851f19b7db2/thumbnails/99999999-6666-1111-8888-01f959516b44.jpg\\");"
 `;
