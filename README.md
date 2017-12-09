@@ -174,7 +174,8 @@ To update an existing object, simply change the fields.
 
 ##### Deleting
 To remove an `optionGroup` or `optionGroupOption` from the database, simply remove it from the JSON.
-**If you want to remove a menu, section or item, update its `isAvailable` flag to 0**
+**If you want to remove a menu or item, update its `isAvailable` flag to 0**
+**Sections cannot be deleted and do not have an `isAvailable` flag**
 ```diff
    menus: {
      e5bd5cdb-5c58-40ec-8f96-f1f158687e7c: {

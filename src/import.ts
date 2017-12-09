@@ -31,7 +31,7 @@ export namespace importScripts {
     let sqlStatements: string[] = [];
     for (const menuUid in menuDiff) {
       const menu = newJsonObj.menus[getSafeUid(menuUid)];
-      const printMenu = menu ? menu.name : 'New menu name';
+      const printMenu = menu && menu.menuName ? menu.menuName : 'New menu name';
       sqlStatements = sqlStatements.concat(
         [`/** Diff menu: ${printMenu} */`],
         outputSQL(newJsonObj, menuDiff, 'menus', [menuUid, rluid])
@@ -39,7 +39,7 @@ export namespace importScripts {
       const sectionDiff = menuDiff[menuUid].sections;
       for (const sectionUid in sectionDiff) {
         const section = menu ? menu.sections[getSafeUid(sectionUid)] : null;
-        const printSection = section ? section.name : 'New section name';
+        const printSection = section && section.sectionName ? section.sectionName : 'New section name';
         sqlStatements = sqlStatements.concat(
           [`/** Diff section: ${printMenu} > ${printSection} */`],
           outputSQL(newJsonObj, sectionDiff, 'sections', [sectionUid, menuUid, rluid])
@@ -47,7 +47,7 @@ export namespace importScripts {
         const itemDiff = sectionDiff[sectionUid].items;
         for (const itemUid in itemDiff) {
           const item = section ? section.items[getSafeUid(itemUid)] : null;
-          const printItem = item ? item.name : 'New item name';
+          const printItem = item && item.itemName ? item.itemName : 'New item name';
           sqlStatements = sqlStatements.concat(
             [`/** Diff item: ${printMenu} > ${printSection} > ${printItem} */`],
             outputSQL(newJsonObj, itemDiff, 'items', [itemUid, sectionUid, menuUid, rluid])
@@ -55,7 +55,7 @@ export namespace importScripts {
           const optionGroupDiff = itemDiff[itemUid].optionGroups;
           for (const optionGroupUid in optionGroupDiff) {
             const optionGroup = item ? item.optionGroups[getSafeUid(optionGroupUid)] : null;
-            const printOptionGroup = optionGroup ? optionGroup.name : 'New optionGroup name';
+            const printOptionGroup = optionGroup && optionGroup.optionGroupName ? optionGroup.optionGroupName : 'New optionGroup name';
             sqlStatements = sqlStatements.concat(
               [`/** Diff optionGroup: ${printMenu} > ${printSection} > ${printItem} > ${printOptionGroup} */`],
               outputSQL(newJsonObj, optionGroupDiff, 'optionGroups', [optionGroupUid, itemUid, sectionUid, menuUid, rluid])
@@ -63,7 +63,7 @@ export namespace importScripts {
             const optionDiff = optionGroupDiff[optionGroupUid].options;
             for (const optionUid in optionDiff) {
               const option = optionGroup ? optionGroup.options[getSafeUid(optionUid)] : null;
-              const printOption = option ? option.name : 'New option';
+              const printOption = option && option.optionGroupOptionName ? option.optionGroupOptionName : 'New option';
               sqlStatements = sqlStatements.concat(
                 [`/** Diff option: ${printMenu} > ${printSection} > ${printItem} > ${printOptionGroup} > ${printOption} */`],
                 outputSQL(newJsonObj, optionDiff, 'options', [optionUid, optionGroupUid, itemUid, sectionUid, menuUid, rluid])
@@ -100,10 +100,11 @@ export namespace importScripts {
   function outputSQL (newJsonObj, jsonDiff, objectType, uidStack): string[] {
     const uid = uidStack[0];
     const parentUid = uidStack[1];
-    const printType = objectType.substring(0, objectType.length - 1);
+    const printTypeTmp = objectType.substring(0, objectType.length - 1);
+    const printType = printTypeTmp === 'option' ? 'optionGroupOption' : printTypeTmp;
     let statements: string[] = [];
     if (isNewChild(uid)) {
-      statements = [`/** Create new ${printType}${jsonDiff[uid].name ? ': ' + jsonDiff[uid].name : ''} */`]
+      statements = [`/** Create new ${printType} */`]
         .concat(
           outputCreate(jsonDiff[uid], objectType, parentUid)
         );
@@ -111,7 +112,7 @@ export namespace importScripts {
       if (objectType !== 'optionGroups' && objectType !== 'options') {
         throw new Error(`ERROR: Cannot delete objects of type ${objectType}! Try updating it's isAvailable flag instead`);
       }
-      statements = [`/** Delete ${printType}: ${jsonDiff[uid].name} */`]
+      statements = [`/** Delete ${printType}: ${jsonDiff[uid][printType + 'Name']} */`]
           .concat(
             outputDelete(jsonDiff, objectType, uid)
           );
@@ -120,8 +121,7 @@ export namespace importScripts {
       const diffKeys = getDifferences(obj, objectType);
       if (diffKeys.length > 0) {
         const newMenuObj = getNewObj(newJsonObj, uidStack);
-        const printType = objectType.substring(0, objectType.length - 1);
-        statements = [`/** Update ${printType}: ${newMenuObj.name} */`]
+        statements = [`/** Update ${printType}: ${newMenuObj[printType + 'Name']} */`]
           .concat(
             outputUpdate(newMenuObj, objectType)
           );
@@ -198,21 +198,21 @@ export namespace importScripts {
   function outputStoredProcedure (obj, objectType, spDelete?: boolean): string {
     switch (objectType) {
       case 'menus': {
-        return spTemplates.addMenu(obj.end, obj.isAvailable, obj.name, obj.rank, obj.start, obj.uid, obj.__parent);
+        return spTemplates.addMenu(obj.end, obj.isAvailable, obj.menuName, obj.rank, obj.start, obj.uid, obj.__parent);
       }
       case 'sections': {
-        return spTemplates.addSection(obj.ageLimit, obj.name, obj.rank, obj.uid, obj.__parent);
+        return spTemplates.addSection(obj.ageLimit, obj.sectionName, obj.rank, obj.uid, obj.__parent);
       }
       case 'items': {
-        return spTemplates.addItem(obj.description, obj.isAvailable, obj.name, obj.price, obj.rank, obj.uid, obj.__parent);
+        return spTemplates.addItem(obj.description, obj.isAvailable, obj.itemName, obj.price, obj.rank, obj.uid, obj.__parent);
       }
       case 'optionGroups': {
         return spDelete ? spTemplates.deleteOptionGroup(obj.uid) :
-          spTemplates.addOptionGroup(obj.name, obj.rank, obj.type, obj.uid, obj.__parent);
+          spTemplates.addOptionGroup(obj.optionGroupName, obj.rank, obj.type, obj.uid, obj.__parent);
       }
       case 'options': {
         return spDelete ? spTemplates.deleteOptionGroupOption(obj.uid) :
-          spTemplates.addOptionGroupOption(obj.isDefault, obj.name, obj.rank, obj.uid, obj.value, obj.__parent);
+          spTemplates.addOptionGroupOption(obj.isDefault, obj.optionGroupOptionName, obj.rank, obj.uid, obj.value, obj.__parent);
       }
       default: throw new Error(`objectType: ${objectType} not recognized`);
     }
